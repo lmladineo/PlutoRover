@@ -21,9 +21,8 @@ namespace PlutoRover
             var currentLocation = new Location(0, 0, Direction.N);
 
             // TODO: Implement command parsing
-            return command != "F"
-                ? null
-                : currentLocation.CalculateNewLocation(command);
+
+            return currentLocation.CalculateNewLocation(command);
         }
     }
 }

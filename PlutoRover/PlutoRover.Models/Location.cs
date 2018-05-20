@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PlutoRover.Models.Enums;
+using PlutoRover.Models.Extensions;
 using ApplicationException = PlutoRover.Models.Exceptions.ApplicationException;
 
 namespace PlutoRover.Models
@@ -15,7 +16,11 @@ namespace PlutoRover.Models
             Y = y;
             Direction = direction;
 
-            _commandToNewLocation = new Dictionary<string, Func<Location>>();
+            _commandToNewLocation = new Dictionary<string, Func<Location>>
+            {
+                {"R", TurnRight},
+                {"L", TurnLeft},
+            };
 
             switch (direction)
             {
@@ -55,5 +60,9 @@ namespace PlutoRover.Models
         private Location MoveSouth() => new Location(X, Y - 1, Direction);
 
         private Location MoveWest() => new Location(X - 1, Y, Direction);
+
+        private Location TurnRight() => new Location(X, Y, Direction.Next());
+
+        private Location TurnLeft() => new Location(X, Y, Direction.Previous());
     }
 }

@@ -202,5 +202,44 @@ namespace PlutoRover.Models.Tests
             // Assert
             action.Should().Throw<ApplicationException>();
         }
+
+        [TestCase(Direction.N, Direction.E)]
+        [TestCase(Direction.E, Direction.S)]
+        [TestCase(Direction.S, Direction.W)]
+        [TestCase(Direction.W, Direction.N)]
+        public void CalculateNewLocation_SendRightCommand_RoverTurnsRight(Direction startDirection, Direction expectedNewDirection)
+            => CalculateNewLocation_SendXCommand_RoverHasChangedDirection(
+                command: "R",
+                currentLocation: new Location(0, 0, startDirection),
+                expectedNewDirection: expectedNewDirection
+            );
+
+        [TestCase(Direction.N, Direction.W)]
+        [TestCase(Direction.W, Direction.S)]
+        [TestCase(Direction.S, Direction.E)]
+        [TestCase(Direction.E, Direction.N)]
+        public void CalculateNewLocation_SendLeftCommand_RoverTurnsLeft(Direction startDirection, Direction expectedNewDirection)
+            => CalculateNewLocation_SendXCommand_RoverHasChangedDirection(
+                command: "L",
+                currentLocation: new Location(0, 0, startDirection),
+                expectedNewDirection: expectedNewDirection
+            );
+
+        private void CalculateNewLocation_SendXCommand_RoverHasChangedDirection(string command, Location currentLocation,
+            Direction expectedNewDirection)
+        {
+            // Arrange
+
+            // Act
+            var newLocation = currentLocation.CalculateNewLocation(command);
+
+            // Assert
+            newLocation.Should()
+                .Match<Location>(location => location.X == currentLocation.X)
+                .And
+                .Match<Location>(location => location.Y == currentLocation.Y)
+                .And
+                .Match<Location>(location => location.Direction == expectedNewDirection);
+        }
     }
 }
