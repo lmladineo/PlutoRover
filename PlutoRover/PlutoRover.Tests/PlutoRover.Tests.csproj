@@ -70,11 +70,21 @@
     <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UnitTest1.cs" />
+    <Compile Include="PlutoRoverApiTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlutoRover.Models\PlutoRover.Models.csproj">
+      <Project>{92378bcd-2ae0-4128-8219-660d9cd55bad}</Project>
+      <Name>PlutoRover.Models</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\PlutoRover\PlutoRover.csproj">
+      <Project>{1c5d3a7c-31de-4fc7-a651-525d891b7c2f}</Project>
+      <Name>PlutoRover</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
