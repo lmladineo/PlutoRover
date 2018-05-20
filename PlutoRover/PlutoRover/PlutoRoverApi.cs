@@ -15,7 +15,7 @@ namespace PlutoRover
             _locationService = locationService;
         }
 
-        public Location Move(string command)
+        public PlutoRoverMoveResponse Move(string command)
         {
             _validationService.ValidateCommand(command);
 
@@ -27,7 +27,7 @@ namespace PlutoRover
 
             _locationService.UpdateLocation(newLocation);
 
-            return newLocation;
+            return new PlutoRoverMoveResponse(newLocation);
         }
     }
 }

@@ -4,6 +4,6 @@ namespace PlutoRover.Contracts
 {
     public interface IPlutoRoverApi
     {
-        Location Move(string command);
+        PlutoRoverMoveResponse Move(string command);
     }
 }

@@ -38,6 +38,7 @@ namespace PlutoRover.Tests
 
             // Assert
             result.Should().NotBeNull();
+            result?.NewLocation.Should().NotBeNull();
         }
 
         [Test]
@@ -53,11 +54,11 @@ namespace PlutoRover.Tests
 
             // Assert
             result.Should()
-                .Match<Location>(location => location.X == 0)
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.X == 0)
                 .And
-                .Match<Location>(location => location.Y == 1)
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.Y == 1)
                 .And
-                .Match<Location>(location => location.Direction == Direction.N);
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.Direction == Direction.N);
         }
 
         [Test]

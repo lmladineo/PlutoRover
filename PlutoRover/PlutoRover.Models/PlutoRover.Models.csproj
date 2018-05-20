@@ -48,6 +48,7 @@
     <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Extensions\EnumExtensions.cs" />
     <Compile Include="Location.cs" />
+    <Compile Include="PlutoRoverMoveResponse.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
