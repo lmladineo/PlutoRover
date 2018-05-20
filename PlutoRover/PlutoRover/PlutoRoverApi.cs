@@ -23,7 +23,7 @@ namespace PlutoRover
 
             // TODO: Implement command parsing
 
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command, _locationService.GetSurfaceSize());
 
             _locationService.UpdateLocation(newLocation);
 

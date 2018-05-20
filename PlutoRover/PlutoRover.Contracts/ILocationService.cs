@@ -9,5 +9,7 @@ namespace PlutoRover.Contracts
         Location GetCurrentLocation();
 
         void UpdateLocation(Location newLocation);
+
+        (int width, int height) GetSurfaceSize();
     }
 }

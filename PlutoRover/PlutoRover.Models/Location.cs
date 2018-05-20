@@ -8,7 +8,7 @@ namespace PlutoRover.Models
 {
     public class Location
     {
-        private readonly Dictionary<string, Func<Location>> _commandToNewLocation;
+        private readonly Dictionary<string, Func<(int width, int height), Location>> _commandToNewLocation;
 
         public Location(int x, int y, Direction direction)
         {
@@ -16,7 +16,7 @@ namespace PlutoRover.Models
             Y = y;
             Direction = direction;
 
-            _commandToNewLocation = new Dictionary<string, Func<Location>>
+            _commandToNewLocation = new Dictionary<string, Func<(int width, int height), Location>>
             {
                 {"R", TurnRight},
                 {"L", TurnLeft},
@@ -49,20 +49,24 @@ namespace PlutoRover.Models
 
         public Direction Direction { get; }
 
-        public Location CalculateNewLocation(string command) => _commandToNewLocation.ContainsKey(command)
-            ? _commandToNewLocation[command]()
+        public Location CalculateNewLocation(string command, (int width, int height) surfaceSize) => _commandToNewLocation.ContainsKey(command)
+            ? _commandToNewLocation[command](surfaceSize)
             : throw new ApplicationException($"Command '{command}' not supported.");
 
-        private Location MoveNorth() => new Location(X, Y + 1, Direction);
+        private Location MoveNorth((int width, int height) surfaceSize) =>
+            new Location(X, Y + 1 < surfaceSize.height ? Y + 1 : 0, Direction);
 
-        private Location MoveEast() => new Location(X + 1, Y, Direction);
+        private Location MoveEast((int width, int height) surfaceSize) =>
+            new Location(X + 1 < surfaceSize.width ? X + 1 : 0, Y, Direction);
 
-        private Location MoveSouth() => new Location(X, Y - 1, Direction);
+        private Location MoveSouth((int width, int height) surfaceSize) =>
+            new Location(X, Y - 1 > 0 ? Y - 1 : surfaceSize.height - 1, Direction);
 
-        private Location MoveWest() => new Location(X - 1, Y, Direction);
+        private Location MoveWest((int width, int height) surfaceSize) =>
+            new Location(X - 1 > 0 ? X - 1 : surfaceSize.width - 1, Y, Direction);
 
-        private Location TurnRight() => new Location(X, Y, Direction.Next());
+        private Location TurnRight((int width, int height) surfaceSize) => new Location(X, Y, Direction.Next());
 
-        private Location TurnLeft() => new Location(X, Y, Direction.Previous());
+        private Location TurnLeft((int width, int height) surfaceSize) => new Location(X, Y, Direction.Previous());
     }
 }

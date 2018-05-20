@@ -31,6 +31,7 @@ namespace PlutoRover.Tests
             // Arrange
             var command = "F";
             _locationServiceMock.Setup(x => x.GetCurrentLocation()).Returns(new Location(0, 0, Direction.N));
+            _locationServiceMock.Setup(x => x.GetSurfaceSize()).Returns((100, 100));
 
             // Act
             var result = _plutoRoverApi.Move(command);
@@ -45,6 +46,7 @@ namespace PlutoRover.Tests
             // Arrange
             var command = "F";
             _locationServiceMock.Setup(x => x.GetCurrentLocation()).Returns(new Location(0, 0, Direction.N));
+            _locationServiceMock.Setup(x => x.GetSurfaceSize()).Returns((100, 100));
 
             // Act
             var result = _plutoRoverApi.Move(command);

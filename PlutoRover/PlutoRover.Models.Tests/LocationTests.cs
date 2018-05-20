@@ -9,6 +9,8 @@ namespace PlutoRover.Models.Tests
     [TestFixture]
     public class LocationTests
     {
+        private static readonly (int width, int height) SphereSize = (100, 100);
+
         [TestCase("F")]
         [TestCase("B")]
         public void CalculateNewLocation_SendSupportedCommand_ResponseIsNotNull(string command)
@@ -17,7 +19,7 @@ namespace PlutoRover.Models.Tests
             var currentLocation = new Location(0, 0, Direction.N);
 
             // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command, SphereSize);
 
             // Assert
             newLocation.Should().NotBeNull();
@@ -31,163 +33,172 @@ namespace PlutoRover.Models.Tests
             var currentLocation = new Location(0, 0, Direction.N);
 
             // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command, SphereSize);
 
             // Assert
             newLocation.Should().NotBeSameAs(currentLocation);
         }
 
-        [Test]
-        public void CalculateNewLocation_SendForwardCommandWithRoverFacingNorth_RoverMovesForwardWithRoverFacingNorth()
+        [TestCase(0, 1, 100)]
+        [TestCase(99, 0, 100)]
+        public void CalculateNewLocation_SendForwardCommandWithRoverFacingNorth_RoverHasCorrectNewLocation(int startLocationY, int expectedNewLocationY, int sphereHeight)
         {
             // Arrange
             var command = "F";
-            var currentLocation = new Location(0, 0, Direction.N);
+            var currentLocation = new Location(0, startLocationY, Direction.N);
 
             // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command, (100, sphereHeight));
 
             // Assert
             newLocation.Should()
                 .Match<Location>(location => location.X == 0)
                 .And
-                .Match<Location>(location => location.Y == 1)
+                .Match<Location>(location => location.Y == expectedNewLocationY)
                 .And
                 .Match<Location>(location => location.Direction == Direction.N);
         }
 
-        [Test]
-        public void CalculateNewLocation_SendForwardCommandWithRoverFacingEast_RoverMovesForwardWithRoverFacingEast()
+        [TestCase(0, 99, 100)]
+        [TestCase(99, 98, 100)]
+        public void CalculateNewLocation_SendForwardCommandWithRoverFacingSouth_RoverHasCorrectNewLocation(int startLocationY, int expectedNewLocationY, int sphereHeight)
         {
             // Arrange
             var command = "F";
-            var currentLocation = new Location(0, 0, Direction.E);
+            var currentLocation = new Location(0, startLocationY, Direction.S);
 
             // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command, (100, sphereHeight));
 
             // Assert
             newLocation.Should()
-                .Match<Location>(location => location.X == 1)
+                .Match<Location>(location => location.X == 0)
+                .And
+                .Match<Location>(location => location.Y == expectedNewLocationY)
+                .And
+                .Match<Location>(location => location.Direction == Direction.S);
+        }
+
+        [TestCase(0, 1, 100)]
+        [TestCase(99, 0, 100)]
+        public void CalculateNewLocation_SendForwardCommandWithRoverFacingEast_RoverHasCorrectNewLocation(int startLocationX, int expectedNewLocationX, int sphereWidth)
+        {
+            // Arrange
+            var command = "F";
+            var currentLocation = new Location(startLocationX, 0, Direction.E);
+
+            // Act
+            var newLocation = currentLocation.CalculateNewLocation(command, (sphereWidth, 100));
+
+            // Assert
+            newLocation.Should()
+                .Match<Location>(location => location.X == expectedNewLocationX)
                 .And
                 .Match<Location>(location => location.Y == 0)
                 .And
                 .Match<Location>(location => location.Direction == Direction.E);
         }
 
-        [Test]
-        public void CalculateNewLocation_SendForwardCommandWithRoverFacingSouth_RoverMovesForwardWithRoverFacingSouth()
+        [TestCase(0, 99, 100)]
+        [TestCase(99, 98, 100)]
+        public void CalculateNewLocation_SendForwardCommandWithRoverFacingWest_RoverHasCorrectNewLocation(int startLocationX, int expectedNewLocationX, int sphereWidth)
         {
             // Arrange
             var command = "F";
-            var currentLocation = new Location(0, 0, Direction.S);
+            var currentLocation = new Location(startLocationX, 0, Direction.W);
 
             // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command, (sphereWidth, 100));
 
             // Assert
             newLocation.Should()
-                .Match<Location>(location => location.X == 0)
-                .And
-                .Match<Location>(location => location.Y == -1)
-                .And
-                .Match<Location>(location => location.Direction == Direction.S);
-        }
-
-        [Test]
-        public void CalculateNewLocation_SendForwardCommandWithRoverFacingWest_RoverMovesForwardWithRoverFacingWest()
-        {
-            // Arrange
-            var command = "F";
-            var currentLocation = new Location(0, 0, Direction.W);
-
-            // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
-
-            // Assert
-            newLocation.Should()
-                .Match<Location>(location => location.X == -1)
+                .Match<Location>(location => location.X == expectedNewLocationX)
                 .And
                 .Match<Location>(location => location.Y == 0)
                 .And
                 .Match<Location>(location => location.Direction == Direction.W);
         }
 
-        [Test]
-        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingNorth_RoverMovesBackwardWithRoverFacingNorth()
+        [TestCase(0, 99, 100)]
+        [TestCase(99, 98, 100)]
+        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingNorth_RoverHasCorrectNewLocation(int startLocationY, int expectedNewLocationY, int sphereHeight)
         {
             // Arrange
             var command = "B";
-            var currentLocation = new Location(0, 0, Direction.N);
+            var currentLocation = new Location(0, startLocationY, Direction.N);
 
             // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command, (100, sphereHeight));
 
             // Assert
             newLocation.Should()
                 .Match<Location>(location => location.X == 0)
                 .And
-                .Match<Location>(location => location.Y == -1)
+                .Match<Location>(location => location.Y == expectedNewLocationY)
                 .And
                 .Match<Location>(location => location.Direction == Direction.N);
         }
 
-        [Test]
-        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingEast_RoverMovesBackwardWithRoverFacingEast()
+        [TestCase(0, 1, 100)]
+        [TestCase(99, 0, 100)]
+        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingSouth_RoverHasCorrectNewLocation(int startLocationY, int expectedNewLocationY, int sphereHeight)
         {
             // Arrange
             var command = "B";
-            var currentLocation = new Location(0, 0, Direction.E);
+            var currentLocation = new Location(0, startLocationY, Direction.S);
 
             // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command, (100, sphereHeight));
 
             // Assert
             newLocation.Should()
-                .Match<Location>(location => location.X == -1)
+                .Match<Location>(location => location.X == 0)
+                .And
+                .Match<Location>(location => location.Y == expectedNewLocationY)
+                .And
+                .Match<Location>(location => location.Direction == Direction.S);
+        }
+
+        [TestCase(0, 99, 100)]
+        [TestCase(99, 98, 100)]
+        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingEast_RoverHasCorrectNewLocation(int startLocationX, int expectedNewLocationX, int sphereWidth)
+        {
+            // Arrange
+            var command = "B";
+            var currentLocation = new Location(startLocationX, 0, Direction.E);
+
+            // Act
+            var newLocation = currentLocation.CalculateNewLocation(command, (sphereWidth, 100));
+
+            // Assert
+            newLocation.Should()
+                .Match<Location>(location => location.X == expectedNewLocationX)
                 .And
                 .Match<Location>(location => location.Y == 0)
                 .And
                 .Match<Location>(location => location.Direction == Direction.E);
         }
 
-        [Test]
-        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingSouth_RoverMovesBackwardWithRoverFacingSouth()
+        [TestCase(0, 1, 100)]
+        [TestCase(99, 0, 100)]
+        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingWest_RoverHasCorrectNewLocation(int startLocationX, int expectedNewLocationX, int sphereWidth)
         {
             // Arrange
             var command = "B";
-            var currentLocation = new Location(0, 0, Direction.S);
+            var currentLocation = new Location(startLocationX, 0, Direction.W);
 
             // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command, (sphereWidth, 100));
 
             // Assert
             newLocation.Should()
-                .Match<Location>(location => location.X == 0)
-                .And
-                .Match<Location>(location => location.Y == 1)
-                .And
-                .Match<Location>(location => location.Direction == Direction.S);
-        }
-
-        [Test]
-        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingWest_RoverMovesBackwardWithRoverFacingWest()
-        {
-            // Arrange
-            var command = "B";
-            var currentLocation = new Location(0, 0, Direction.W);
-
-            // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
-
-            // Assert
-            newLocation.Should()
-                .Match<Location>(location => location.X == 1)
+                .Match<Location>(location => location.X == expectedNewLocationX)
                 .And
                 .Match<Location>(location => location.Y == 0)
                 .And
                 .Match<Location>(location => location.Direction == Direction.W);
         }
+
 
         [Test]
         public void CalculateNewLocation_SendNonSupportedCommand_ApplicationExceptionThrown()
@@ -197,7 +208,7 @@ namespace PlutoRover.Models.Tests
             var currentLocation = new Location(0, 0, Direction.W);
 
             // Act
-            Action action = () => currentLocation.CalculateNewLocation(command);
+            Action action = () => currentLocation.CalculateNewLocation(command, SphereSize);
 
             // Assert
             action.Should().Throw<ApplicationException>();
@@ -231,7 +242,7 @@ namespace PlutoRover.Models.Tests
             // Arrange
 
             // Act
-            var newLocation = currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command,SphereSize);
 
             // Assert
             newLocation.Should()
