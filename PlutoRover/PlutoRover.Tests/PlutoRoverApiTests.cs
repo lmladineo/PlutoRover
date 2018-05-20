@@ -114,5 +114,68 @@ namespace PlutoRover.Tests
                 .And
                 .Match<PlutoRoverMoveResponse>(response => !string.IsNullOrEmpty(response.ErrorMessage));
         }
+
+        [Test]
+        public void Move_SendCommandFFRFFToRoverWithLocationZeroZeroNorthOn100x100Surface_RoverMovesToTwoTwoEast()
+        {
+            // Arrange
+            var command = "FFRFF";
+            _locationServiceMock.Setup(x => x.GetCurrentLocation()).Returns(new Location(0, 0, Direction.N));
+            _locationServiceMock.Setup(x => x.GetSurfaceSize()).Returns((100, 100));
+            _obstacleDetectionServiceMock.Setup(x => x.HasObstacle(It.IsAny<Location>())).Returns(false);
+
+            // Act
+            var result = _plutoRoverApi.Move(command);
+
+            // Assert
+            result.Should()
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.X == 2)
+                .And
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.Y == 2)
+                .And
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.Direction == Direction.E);
+        }
+
+        [Test]
+        public void Move_SendCommandFFLFFToRoverWithLocationZeroZeroNorthOn100x100Surface_RoverMovesToTwoTwoEast()
+        {
+            // Arrange
+            var command = "FFLFF";
+            _locationServiceMock.Setup(x => x.GetCurrentLocation()).Returns(new Location(0, 0, Direction.N));
+            _locationServiceMock.Setup(x => x.GetSurfaceSize()).Returns((100, 100));
+            _obstacleDetectionServiceMock.Setup(x => x.HasObstacle(It.IsAny<Location>())).Returns(false);
+
+            // Act
+            var result = _plutoRoverApi.Move(command);
+
+            // Assert
+            result.Should()
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.X == 98)
+                .And
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.Y == 2)
+                .And
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.Direction == Direction.W);
+        }
+
+        [Test]
+        public void Move_SendCommandFFFFFRFFLFFLBBBBToRoverWithLocationZeroZeroNorthOn5x5Surface_RoverMovesToZeroTwoEast()
+        {
+            // Arrange
+            var command = "FFFFRFFLFFLBBBB";
+            _locationServiceMock.Setup(x => x.GetCurrentLocation()).Returns(new Location(0, 0, Direction.N));
+            _locationServiceMock.Setup(x => x.GetSurfaceSize()).Returns((5, 5));
+            _obstacleDetectionServiceMock.Setup(x => x.HasObstacle(It.IsAny<Location>())).Returns(false);
+
+            // Act
+            var result = _plutoRoverApi.Move(command);
+
+            // Assert
+            result.Should()
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.X == 1)
+                .And
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.Y == 1)
+                .And
+                .Match<PlutoRoverMoveResponse>(response => response.NewLocation.Direction == Direction.W);
+        }
     }
 }

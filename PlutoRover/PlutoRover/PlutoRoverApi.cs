@@ -1,4 +1,5 @@
-﻿using PlutoRover.Contracts;
+﻿using System.Linq;
+using PlutoRover.Contracts;
 using PlutoRover.Models;
 
 namespace PlutoRover
@@ -18,26 +19,31 @@ namespace PlutoRover
             _obstacleDetectionService = obstacleDetectionService;
         }
 
-        public PlutoRoverMoveResponse Move(string command)
+        public PlutoRoverMoveResponse Move(string commands)
         {
-            _validationService.ValidateCommand(command);
+            _validationService.ValidateCommand(commands);
 
             var currentLocation = _locationService.GetCurrentLocation();
+            var surfaceSize = _locationService.GetSurfaceSize();
 
-            // TODO: Implement command parsing
-
-            var newLocation = currentLocation.CalculateNewLocation(command, _locationService.GetSurfaceSize());
-
-            if (_obstacleDetectionService.HasObstacle(newLocation))
+            Location newLocation = null;
+            foreach (var command in commands.Select(character => character.ToString()))
             {
-                return new PlutoRoverMoveResponse(
-                    currentLocation,
-                    isError: true,
-                    errorMessage:
-                    $"Obstacle detected on location [{newLocation.X}, {newLocation.Y}, {newLocation.Direction}].");
-            }
+                newLocation = currentLocation.CalculateNewLocation(command, surfaceSize);
 
-            _locationService.UpdateLocation(newLocation);
+                if (_obstacleDetectionService.HasObstacle(newLocation))
+                {
+                    return new PlutoRoverMoveResponse(
+                        currentLocation,
+                        isError: true,
+                        errorMessage:
+                        $"Obstacle detected on location [{newLocation.X}, {newLocation.Y}, {newLocation.Direction}].");
+                }
+
+                _locationService.UpdateLocation(newLocation);
+
+                currentLocation = newLocation;
+            }
 
             return new PlutoRoverMoveResponse(newLocation);
         }
