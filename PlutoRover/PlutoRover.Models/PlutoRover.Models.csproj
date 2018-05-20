@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Enums\Direction.cs" />
     <Compile Include="Exceptions\ApplicationException.cs" />
+    <Compile Include="Exceptions\ValidationException.cs" />
     <Compile Include="Location.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
