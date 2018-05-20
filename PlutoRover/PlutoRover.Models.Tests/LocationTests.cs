@@ -9,11 +9,11 @@ namespace PlutoRover.Models.Tests
     [TestFixture]
     public class LocationTests
     {
-        [Test]
-        public void CalculateNewLocation_SendForwardCommand_ResponseIsNotNull()
+        [TestCase("F")]
+        [TestCase("B")]
+        public void CalculateNewLocation_SendSupportedCommand_ResponseIsNotNull(string command)
         {
             // Arrange
-            var command = "F";
             var currentLocation = new Location(0, 0, Direction.N);
 
             // Act
@@ -23,11 +23,11 @@ namespace PlutoRover.Models.Tests
             newLocation.Should().NotBeNull();
         }
 
-        [Test]
-        public void CalculateNewLocation_SendForwardCommand_ResponseIsNewLocationObject()
+        [TestCase("F")]
+        [TestCase("B")]
+        public void CalculateNewLocation_SendSupportedCommand_ResponseIsNewLocationObject(string command)
         {
             // Arrange
-            var command = "F";
             var currentLocation = new Location(0, 0, Direction.N);
 
             // Act
@@ -94,7 +94,6 @@ namespace PlutoRover.Models.Tests
                 .Match<Location>(location => location.Direction == Direction.S);
         }
 
-
         [Test]
         public void CalculateNewLocation_SendForwardCommandWithRoverFacingWest_RoverMovesForwardWithRoverFacingWest()
         {
@@ -108,6 +107,82 @@ namespace PlutoRover.Models.Tests
             // Assert
             newLocation.Should()
                 .Match<Location>(location => location.X == -1)
+                .And
+                .Match<Location>(location => location.Y == 0)
+                .And
+                .Match<Location>(location => location.Direction == Direction.W);
+        }
+
+        [Test]
+        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingNorth_RoverMovesBackwardWithRoverFacingNorth()
+        {
+            // Arrange
+            var command = "B";
+            var currentLocation = new Location(0, 0, Direction.N);
+
+            // Act
+            var newLocation = currentLocation.CalculateNewLocation(command);
+
+            // Assert
+            newLocation.Should()
+                .Match<Location>(location => location.X == 0)
+                .And
+                .Match<Location>(location => location.Y == -1)
+                .And
+                .Match<Location>(location => location.Direction == Direction.N);
+        }
+
+        [Test]
+        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingEast_RoverMovesBackwardWithRoverFacingEast()
+        {
+            // Arrange
+            var command = "B";
+            var currentLocation = new Location(0, 0, Direction.E);
+
+            // Act
+            var newLocation = currentLocation.CalculateNewLocation(command);
+
+            // Assert
+            newLocation.Should()
+                .Match<Location>(location => location.X == -1)
+                .And
+                .Match<Location>(location => location.Y == 0)
+                .And
+                .Match<Location>(location => location.Direction == Direction.E);
+        }
+
+        [Test]
+        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingSouth_RoverMovesBackwardWithRoverFacingSouth()
+        {
+            // Arrange
+            var command = "B";
+            var currentLocation = new Location(0, 0, Direction.S);
+
+            // Act
+            var newLocation = currentLocation.CalculateNewLocation(command);
+
+            // Assert
+            newLocation.Should()
+                .Match<Location>(location => location.X == 0)
+                .And
+                .Match<Location>(location => location.Y == 1)
+                .And
+                .Match<Location>(location => location.Direction == Direction.S);
+        }
+
+        [Test]
+        public void CalculateNewLocation_SendBackwardCommandWithRoverFacingWest_RoverMovesBackwardWithRoverFacingWest()
+        {
+            // Arrange
+            var command = "B";
+            var currentLocation = new Location(0, 0, Direction.W);
+
+            // Act
+            var newLocation = currentLocation.CalculateNewLocation(command);
+
+            // Assert
+            newLocation.Should()
+                .Match<Location>(location => location.X == 1)
                 .And
                 .Match<Location>(location => location.Y == 0)
                 .And

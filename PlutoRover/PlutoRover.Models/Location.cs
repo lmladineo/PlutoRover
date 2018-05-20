@@ -21,15 +21,19 @@ namespace PlutoRover.Models
             {
                 case Direction.N:
                     _commandToNewLocation.Add("F", MoveNorth);
+                    _commandToNewLocation.Add("B", MoveSouth);
                     break;
                 case Direction.E:
                     _commandToNewLocation.Add("F", MoveEast);
+                    _commandToNewLocation.Add("B", MoveWest);
                     break;
                 case Direction.S:
                     _commandToNewLocation.Add("F", MoveSouth);
+                    _commandToNewLocation.Add("B", MoveNorth);
                     break;
                 case Direction.W:
                     _commandToNewLocation.Add("F", MoveWest);
+                    _commandToNewLocation.Add("B", MoveEast);
                     break;
             }
         }
