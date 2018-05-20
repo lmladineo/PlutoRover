@@ -12,10 +12,9 @@ namespace PlutoRover
 
             // TODO: Implement command validation
             // TODO: Implement command parsing
-            // TODO: Move calculation of new location to Location model
             return command != "F"
                 ? null
-                : new Location(currentLocation.X, currentLocation.Y + 1, currentLocation.Direction);
+                : currentLocation.CalculateNewLocation(command);
         }
     }
 }
