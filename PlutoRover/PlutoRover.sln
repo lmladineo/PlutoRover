@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlutoRover.Models", "PlutoR
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlutoRover.Tests", "PlutoRover.Tests\PlutoRover.Tests.csproj", "{EAACDD1C-678A-4EFD-AD88-94A0955730A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlutoRover.Models.Tests", "PlutoRover.Models.Tests\PlutoRover.Models.Tests.csproj", "{03AC70D2-E076-4DFA-ADF1-568992EC600B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{EAACDD1C-678A-4EFD-AD88-94A0955730A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EAACDD1C-678A-4EFD-AD88-94A0955730A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EAACDD1C-678A-4EFD-AD88-94A0955730A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03AC70D2-E076-4DFA-ADF1-568992EC600B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03AC70D2-E076-4DFA-ADF1-568992EC600B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03AC70D2-E076-4DFA-ADF1-568992EC600B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03AC70D2-E076-4DFA-ADF1-568992EC600B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
