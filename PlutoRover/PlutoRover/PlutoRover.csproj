@@ -44,5 +44,11 @@
     <Compile Include="PlutoRoverApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PlutoRover.Models\PlutoRover.Models.csproj">
+      <Project>{92378bcd-2ae0-4128-8219-660d9cd55bad}</Project>
+      <Name>PlutoRover.Models</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
