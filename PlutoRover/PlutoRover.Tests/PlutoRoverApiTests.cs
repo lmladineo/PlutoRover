@@ -14,13 +14,15 @@ namespace PlutoRover.Tests
     {
         private IPlutoRoverApi _plutoRoverApi;
         private Mock<IValidationService> _validationServiceMock;
+        private Mock<ILocationService> _locationServiceMock;
 
         [SetUp]
         protected void SetUp()
         {
             _validationServiceMock = new Mock<IValidationService>();
+            _locationServiceMock = new Mock<ILocationService>();
 
-            _plutoRoverApi = new PlutoRoverApi(_validationServiceMock.Object);
+            _plutoRoverApi = new PlutoRoverApi(_validationServiceMock.Object, _locationServiceMock.Object);
         }
 
         [Test]
@@ -28,6 +30,7 @@ namespace PlutoRover.Tests
         {
             // Arrange
             var command = "F";
+            _locationServiceMock.Setup(x => x.GetCurrentLocation()).Returns(new Location(0, 0, Direction.N));
 
             // Act
             var result = _plutoRoverApi.Move(command);
@@ -41,6 +44,7 @@ namespace PlutoRover.Tests
         {
             // Arrange
             var command = "F";
+            _locationServiceMock.Setup(x => x.GetCurrentLocation()).Returns(new Location(0, 0, Direction.N));
 
             // Act
             var result = _plutoRoverApi.Move(command);

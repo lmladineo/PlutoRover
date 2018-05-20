@@ -1,6 +1,5 @@
 ﻿using PlutoRover.Contracts;
 using PlutoRover.Models;
-using PlutoRover.Models.Enums;
 
 namespace PlutoRover
 {
@@ -8,21 +7,27 @@ namespace PlutoRover
     public class PlutoRoverApi : IPlutoRoverApi
     {
         private readonly IValidationService _validationService;
+        private readonly ILocationService _locationService;
 
-        public PlutoRoverApi(IValidationService validationService)
+        public PlutoRoverApi(IValidationService validationService, ILocationService locationService)
         {
             _validationService = validationService;
+            _locationService = locationService;
         }
 
         public Location Move(string command)
         {
             _validationService.ValidateCommand(command);
 
-            var currentLocation = new Location(0, 0, Direction.N);
+            var currentLocation = _locationService.GetCurrentLocation();
 
             // TODO: Implement command parsing
 
-            return currentLocation.CalculateNewLocation(command);
+            var newLocation = currentLocation.CalculateNewLocation(command);
+
+            _locationService.UpdateLocation(newLocation);
+
+            return newLocation;
         }
     }
 }
