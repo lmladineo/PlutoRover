@@ -15,14 +15,17 @@ namespace PlutoRover.Tests
         private IPlutoRoverApi _plutoRoverApi;
         private Mock<IValidationService> _validationServiceMock;
         private Mock<ILocationService> _locationServiceMock;
+        private Mock<IObstacleDetectionService> _obstacleDetectionServiceMock;
 
         [SetUp]
         protected void SetUp()
         {
             _validationServiceMock = new Mock<IValidationService>();
             _locationServiceMock = new Mock<ILocationService>();
+            _obstacleDetectionServiceMock = new Mock<IObstacleDetectionService>();
 
-            _plutoRoverApi = new PlutoRoverApi(_validationServiceMock.Object, _locationServiceMock.Object);
+            _plutoRoverApi = new PlutoRoverApi(_validationServiceMock.Object, _locationServiceMock.Object,
+                _obstacleDetectionServiceMock.Object);
         }
 
         [Test]
@@ -73,6 +76,43 @@ namespace PlutoRover.Tests
 
             // Assert
             action.Should().Throw<ValidationException>();
+        }
+
+        [Test]
+        public void Move_SendForwardCommand_NoObstacleDetected()
+        {
+            // Arrange
+            var command = "F";
+            _locationServiceMock.Setup(x => x.GetCurrentLocation()).Returns(new Location(0, 0, Direction.N));
+            _locationServiceMock.Setup(x => x.GetSurfaceSize()).Returns((100, 100));
+            _obstacleDetectionServiceMock.Setup(x => x.HasObstacle(It.IsAny<Location>())).Returns(false);
+
+            // Act
+            var result = _plutoRoverApi.Move(command);
+
+            // Assert
+            result.Should()
+                .Match<PlutoRoverMoveResponse>(response => response.IsError == false)
+                .And
+                .Match<PlutoRoverMoveResponse>(response => string.IsNullOrEmpty(response.ErrorMessage));
+        }
+
+        [Test]
+        public void Move_SendForwardCommand_ObstacleDetected()
+        {
+            // Arrange
+            var command = "F";
+            _locationServiceMock.Setup(x => x.GetCurrentLocation()).Returns(new Location(0, 0, Direction.N));
+            _locationServiceMock.Setup(x => x.GetSurfaceSize()).Returns((100, 100));
+            _obstacleDetectionServiceMock.Setup(x => x.HasObstacle(It.IsAny<Location>())).Returns(true);
+
+            // Act
+            var result = _plutoRoverApi.Move(command);
+
+            // Assert
+            result.Should().Match<PlutoRoverMoveResponse>(response => response.IsError == true)
+                .And
+                .Match<PlutoRoverMoveResponse>(response => !string.IsNullOrEmpty(response.ErrorMessage));
         }
     }
 }

@@ -8,11 +8,14 @@ namespace PlutoRover
     {
         private readonly IValidationService _validationService;
         private readonly ILocationService _locationService;
+        private readonly IObstacleDetectionService _obstacleDetectionService;
 
-        public PlutoRoverApi(IValidationService validationService, ILocationService locationService)
+        public PlutoRoverApi(IValidationService validationService, ILocationService locationService,
+            IObstacleDetectionService obstacleDetectionService)
         {
             _validationService = validationService;
             _locationService = locationService;
+            _obstacleDetectionService = obstacleDetectionService;
         }
 
         public PlutoRoverMoveResponse Move(string command)
@@ -24,6 +27,15 @@ namespace PlutoRover
             // TODO: Implement command parsing
 
             var newLocation = currentLocation.CalculateNewLocation(command, _locationService.GetSurfaceSize());
+
+            if (_obstacleDetectionService.HasObstacle(newLocation))
+            {
+                return new PlutoRoverMoveResponse(
+                    currentLocation,
+                    isError: true,
+                    errorMessage:
+                    $"Obstacle detected on location [{newLocation.X}, {newLocation.Y}, {newLocation.Direction}].");
+            }
 
             _locationService.UpdateLocation(newLocation);
 

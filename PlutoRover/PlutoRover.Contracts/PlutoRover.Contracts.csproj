@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ILocationService.cs" />
+    <Compile Include="IObstacleDetectionService.cs" />
     <Compile Include="IPlutoRoverApi.cs" />
     <Compile Include="IValidationService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
