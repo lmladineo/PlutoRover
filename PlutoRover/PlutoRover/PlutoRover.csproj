@@ -40,11 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Contracts\IPlutoRoverApi.cs" />
     <Compile Include="PlutoRoverApi.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\PlutoRover.Contracts\PlutoRover.Contracts.csproj">
+      <Project>{42d7f5ba-1062-4e4f-8295-bc19406814ec}</Project>
+      <Name>PlutoRover.Contracts</Name>
+    </ProjectReference>
     <ProjectReference Include="..\PlutoRover.Models\PlutoRover.Models.csproj">
       <Project>{92378bcd-2ae0-4128-8219-660d9cd55bad}</Project>
       <Name>PlutoRover.Models</Name>
