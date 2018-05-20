@@ -5,6 +5,8 @@ using PlutoRover.Models;
 namespace PlutoRover
 {
     // TODO: Add error handling
+    // TODO: Add logging service
+    // TODO: Add some RESTful API layer
     public class PlutoRoverApi : IPlutoRoverApi
     {
         private readonly IValidationService _validationService;
