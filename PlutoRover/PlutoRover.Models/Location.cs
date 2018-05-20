@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using PlutoRover.Models.Enums;
+using ApplicationException = PlutoRover.Models.Exceptions.ApplicationException;
 
 namespace PlutoRover.Models
 {
@@ -41,7 +42,7 @@ namespace PlutoRover.Models
 
         public Location CalculateNewLocation(string command) => _commandToNewLocation.ContainsKey(command)
             ? _commandToNewLocation[command]()
-            : throw new Exception("Command not supported");
+            : throw new ApplicationException($"Command '{command}' not supported.");
 
         private Location MoveNorth() => new Location(X, Y + 1, Direction);
 

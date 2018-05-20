@@ -1,6 +1,8 @@
-﻿using FluentAssertions;
+﻿using System;
+using FluentAssertions;
 using NUnit.Framework;
 using PlutoRover.Models.Enums;
+using ApplicationException = PlutoRover.Models.Exceptions.ApplicationException;
 
 namespace PlutoRover.Models.Tests
 {
@@ -110,6 +112,20 @@ namespace PlutoRover.Models.Tests
                 .Match<Location>(location => location.Y == 0)
                 .And
                 .Match<Location>(location => location.Direction == Direction.W);
+        }
+
+        [Test]
+        public void CalculateNewLocation_SendNonSupportedCommand_ApplicationExceptionThrown()
+        {
+            // Arrange
+            var command = "X";
+            var currentLocation = new Location(0, 0, Direction.W);
+
+            // Act
+            Action action = () => currentLocation.CalculateNewLocation(command);
+
+            // Assert
+            action.Should().Throw<ApplicationException>();
         }
     }
 }
